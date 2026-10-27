@@ -192,13 +192,13 @@
 
                 <!-- TOMBOL DOWNLOAD (SERBA GUNA 3-KLIK) -->
                 <div class="max-w-md mx-auto px-4">
-                    <button id="downloadBtn" onclick="handleDownloadClick()" class="w-full relative group overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-400 via-green-500 to-amber-400 p-5 font-black text-gray-950 text-lg sm:text-2xl shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 animate-glow-neon ring-4 ring-yellow-300/60">
+                    <button id="downloadBtn" onclick="handleDownloadClick()" class="w-full relative group overflow-hidden rounded-3xl bg-amber-500 hover:bg-amber-400 p-5 font-black text-white text-lg sm:text-2xl shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 animate-glow-neon border-4 border-yellow-300">
                         <!-- Shining Effect Overlay -->
                         <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                         
                         <div class="relative z-10 flex items-center justify-center gap-3 tracking-wide">
-                            <i id="btnIcon" class="fa-solid fa-download text-2xl sm:text-3xl animate-bounce"></i>
-                            <span id="btnText" class="drop-shadow-md tracking-tight font-black">DOWNLOAD APLIKASI SEKARANG</span>
+                            <i id="btnIcon" class="fa-solid fa-download text-2xl sm:text-3xl animate-bounce text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"></i>
+                            <span id="btnText" class="drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-tight font-black text-white">DOWNLOAD APLIKASI SEKARANG</span>
                         </div>
                     </button>
                     
@@ -330,9 +330,9 @@
         // =========================================================
         // MASUKKAN 3 LINK ANDA DI SINI (GANTI ISI DALAM TANDA PETIK)
         // =========================================================
-        const LINK_1 = "https://s.shopee.co.id/1BUTaKwZ9"; // Link Klik Ke-1 https://s.shopee.co.id/1BUTaKwZ9 
-        const LINK_2 = "https://www.tiktok.com/@rhynti/video/7698039055002406160"; // Link Klik Ke-2 https://www.tiktok.com/@rhynti/video/7698039055002406160
-        const LINK_3 = "https://www.tiktok.com/@rhynti/video/7699498276755672340"; // Link Klik Ke-3 (Di Pop-Up Modal) https://www.tiktok.com/@rhynti/video/7699498276755672340
+        const LINK_1 = "https://example.com/link-1"; // Link Klik Ke-1
+        const LINK_2 = "https://example.com/link-2"; // Link Klik Ke-2
+        const LINK_3 = "https://example.com/link-3"; // Link Klik Ke-3 (Di Pop-Up Modal)
 
         // Melacak Jumlah Klik
         let clickCount = 0;
@@ -369,11 +369,10 @@
         }
 
         // =========================================================
-        // LIVE FEED PENARIKAN RANDOM (RINGAN, TANPA BEBAN CPU)
+        // LIVE FEED PENARIKAN RANDOM REALISTIS (RINGAN, TANPA BEBAN CPU)
         // =========================================================
-        const sampleNames = ["Budi S.", "Rina A.", "Dedi K.", "Siti M.", "Agus P.", "Reza H.", "Dewi L.", "Fajar R.", "Nadia Z.", "Andi T.", "Maya K.", "Rizky P."];
+        const sampleNames = ["Budi S.", "Rina A.", "Dedi K.", "Siti M.", "Agus P.", "Reza H.", "Dewi L.", "Fajar R.", "Nadia Z.", "Andi T.", "Maya K.", "Rizky P.", "Eko W.", "Lani N.", "Hendra S."];
         const sampleWallets = ["DANA", "OVO", "GoPay", "ShopeePay"];
-        const sampleAmounts = ["Rp 25.000", "Rp 50.000", "Rp 100.000", "Rp 150.000", "Rp 250.000"];
         const walletColors = {
             "DANA": "text-blue-700 bg-blue-100 border-blue-300",
             "OVO": "text-purple-700 bg-purple-100 border-purple-300",
@@ -385,6 +384,28 @@
             return arr[Math.floor(Math.random() * arr.length)];
         }
 
+        // Fungsi membuat nominal angka acak yang tampak alami/tidak bulat persis
+        function generateRandomAmount() {
+            const ranges = [
+                { min: 15, max: 35 },   // Range Rp 15rb - 35rb
+                { min: 45, max: 95 },   // Range Rp 45rb - 95rb
+                { min: 110, max: 185 }, // Range Rp 110rb - 185rb
+                { min: 210, max: 345 }  // Range Rp 210rb - 345rb
+            ];
+            
+            const selectedRange = getRandomItem(ranges);
+            const thousands = Math.floor(Math.random() * (selectedRange.max - selectedRange.min + 1)) + selectedRange.min;
+            
+            // Variasi akhiran ratusan (misal: 250, 500, 750, 800, 950) agar tidak bulat total
+            const hundredsList = [150, 250, 450, 500, 750, 800, 900, 950];
+            const hundreds = getRandomItem(hundredsList);
+            
+            const total = (thousands * 1000) + hundreds;
+            
+            // Format angka ke format Rupiah Indonesia (cth: 48.750)
+            return "Rp " + total.toLocaleString('id-ID');
+        }
+
         function generateLiveFeed() {
             const container = document.getElementById('liveWithdrawContainer');
             if (!container) return;
@@ -394,7 +415,7 @@
             for (let i = 0; i < 3; i++) {
                 const name = getRandomItem(sampleNames);
                 const wallet = getRandomItem(sampleWallets);
-                const amount = getRandomItem(sampleAmounts);
+                const amount = generateRandomAmount(); // Panggil fungsi nominal acak realistis
                 const colorClass = walletColors[wallet];
                 const initial = name.charAt(0);
 
